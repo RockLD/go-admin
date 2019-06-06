@@ -6,6 +6,10 @@ type Index struct {
 
 }
 
-func (index *Index)Index(c *gin.Context) {
+func (index Index)Index(c *gin.Context) {
 	
+}
+
+func (index Index)First(c *gin.Context) {
+
 }
