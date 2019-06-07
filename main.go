@@ -1,13 +1,22 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"go-admin/controllers"
+	r "go-admin/router"
+	"net/http"
+	"time"
+	"github.com/gorilla/sessions"
 )
+
+var Store = sessions.NewCookieStore([]byte("go-admin"))
 func main() {
-	router := gin.Default()
-	router.GET("/index/index",controllers.Index{}.Index)
+	router := r.Engine()
 
-	router.Run(":8090")
+	s := &http.Server{
+		Addr:":8090",
+		Handler:router,
+		ReadTimeout:10 * time.Second,
+		WriteTimeout:10 * time.Second,
+	}
 
+	s.ListenAndServe()
 }

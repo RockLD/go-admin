@@ -5,12 +5,16 @@ import (
 	"fmt"
 	"go-admin/middleware"
 	"go-admin/controllers"
+	"net/http"
 )
 
 func Engine() *gin.Engine{
 	router := gin.Default()
+	router.LoadHTMLGlob("templates/**/*")
 	router.GET("/ad/login", func(c *gin.Context) {
-		fmt.Println("login")
+		c.HTML(http.StatusOK,"login/login.html",gin.H{
+			"title":"Login-success",
+		})
 	})
 	router.POST("/ad/do-login", func(c *gin.Context) {
 		fmt.Println("do-login")
