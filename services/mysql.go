@@ -4,7 +4,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 	"os"
-	"time"
+	"fmt"
+	"github.com/go-ini/ini"
 	"log"
 )
 
@@ -22,11 +23,16 @@ func PathExist(_path string) bool {
 }
 
 func InitMysql() {
-	engine, err = xorm.NewEngine(config.DbMysqlConfig.DbType, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True",
-		config.DbMysqlConfig.DbUser,
-		config.DbMysqlConfig.DbPassword,
-		config.DbMysqlConfig.DbHost,
-		config.DbMysqlConfig.DbName,
+
+	cfg,err := ini.Load("/conf/database.ini")
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	engine, err = xorm.NewEngine(cfg.Section("mysql").Key("DbType").String(), fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True",
+		cfg.Section("mysql").Key("DbUser").String(),
+		cfg.Section("mysql").Key("DbPassword").String(),
+		cfg.Section("mysql").Key("DbHost").String(),
+		cfg.Section("mysql").Key("DbName").String(),
 	))
 	// f, err := os.Create(config.Log.Sqllog)
 	// if err != nil {
@@ -34,7 +40,7 @@ func InitMysql() {
 	//  return
 	// }
 	// engine.SetLogger(xorm.NewSimpleLogger(f))
-	engine.TZLocation, _ = time.LoadLocation("Asia/Shanghai") //上海时区
+	/*engine.TZLocation, _ = time.LoadLocation("Asia/Shanghai") //上海时区
 
 	if err = engine.Ping(); err != nil { //数据库 ping
 		log.Fatalf("database ping err: %s", err.Error())
@@ -57,7 +63,7 @@ func InitMysql() {
 				log.Fatalf("数据库连接错误: %#v\n", err.Error())
 			}
 		}
-	}(engine)
+	}(engine)*/
 
 }
 
