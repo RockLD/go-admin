@@ -10,7 +10,7 @@ import (
 func Engine() *gin.Engine{
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/**/*")
-	router.Static("/favicon.ico","./static/favicon.ico")
+	router.StaticFile("/favicon.ico","./static/favicon.ico")
 	router.Static("/css","./static/css")
 	router.Static("/js","./static/js")
 	router.Static("/img","./static/img")
