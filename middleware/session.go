@@ -15,7 +15,6 @@ func SessionAuth(c *gin.Context){
 			"error_code":-1,
 		})
 	}
-
 	if session.Values["admin_id"] == nil{
 		c.Redirect(http.StatusFound,"/ad/login")
 	}else{
