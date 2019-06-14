@@ -20,16 +20,4 @@ func SessionAuth(c *gin.Context){
 	}else{
 		c.Next()
 	}
-
-
-
-	//session := sessions.Default(c)
-	//adminId := session.Get("admin_id")
-	//
-	//if adminId == nil {
-	//	c.Redirect(http.StatusFound,"/ad/login")
-	//}else {
-	//	c.Next()
-	//}
-
 }

@@ -28,9 +28,9 @@ func Engine() *gin.Engine{
 	//校验
 	authorize := router.Group("/admin",middleware.SessionAuth)
 	{
-		authorize.GET("/index",controllers.Index{}.Index)
-		authorize.GET("/first",controllers.Index{}.First)
-		authorize.Any("/nodes",controllers.Nodes{}.Index)
+		authorize.GET("/index",controllers.IndexController{}.Index)
+		authorize.GET("/first",controllers.IndexController{}.First)
+		authorize.Any("/nodes",controllers.NodesController{}.Index)
 		authorize.Any("/admins",controllers.Admins{}.Index)
 	}
 

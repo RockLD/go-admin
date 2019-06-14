@@ -1,11 +1,28 @@
 package controllers
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"go-admin/models"
+	"net/http"
+)
 
-type Nodes struct {
-	
+type NodesController struct {
+
 }
 
-func (nodes Nodes) Index(c *gin.Context) {
+func (nodes NodesController) Index(c *gin.Context) {
+	nds,err := models.Nodes{}.GetList()
 
+	if err != nil {
+		c.JSON(http.StatusOK,gin.H{
+			"code":2,
+			"message":err,
+		})
+	}
+
+	c.JSON(http.StatusOK,gin.H{
+		"code":1,
+		"message":"success",
+		"data":nds,
+	})
 }

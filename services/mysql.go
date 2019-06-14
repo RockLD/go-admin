@@ -7,11 +7,12 @@ import (
 	"fmt"
 	"github.com/go-ini/ini"
 	"log"
+	"time"
 )
 
 var (
-	engine *xorm.Engine
-	err error
+	Engine *xorm.Engine
+	Err error
 )
 
 func PathExist(_path string) bool {
@@ -24,14 +25,15 @@ func PathExist(_path string) bool {
 
 func InitMysql() {
 
-	cfg,err := ini.Load("/conf/database.ini")
-	if err != nil {
-		log.Fatal(err.Error())
+	cfg,Err := ini.Load("./conf/database.ini")
+	if Err != nil {
+		log.Fatal(Err.Error())
 	}
-	engine, err = xorm.NewEngine(cfg.Section("mysql").Key("DbType").String(), fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True",
+	Engine, Err = xorm.NewEngine(cfg.Section("mysql").Key("DbType").String(), fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True",
 		cfg.Section("mysql").Key("DbUser").String(),
 		cfg.Section("mysql").Key("DbPassword").String(),
 		cfg.Section("mysql").Key("DbHost").String(),
+		cfg.Section("mysql").Key("DbPort").String(),
 		cfg.Section("mysql").Key("DbName").String(),
 	))
 	// f, err := os.Create(config.Log.Sqllog)
@@ -40,30 +42,39 @@ func InitMysql() {
 	//  return
 	// }
 	// engine.SetLogger(xorm.NewSimpleLogger(f))
-	/*engine.TZLocation, _ = time.LoadLocation("Asia/Shanghai") //上海时区
+	Engine.TZLocation, _ = time.LoadLocation("Asia/Shanghai") //上海时区
 
-	if err = engine.Ping(); err != nil { //数据库 ping
-		log.Fatalf("database ping err: %s", err.Error())
+	if Err = Engine.Ping(); Err != nil { //数据库 ping
+		log.Fatalf("database ping err: %s", Err.Error())
 	}
 
-	if config.ServerConfig.ServerRunEnv == "master" { //根据运行环境判断日志模式
-		engine.ShowSQL(false)
+	if cfg.Section("ServerConfig").Key("ServerRunEnv").String() == "master" { //根据运行环境判断日志模式
+		Engine.ShowSQL(false)
 	} else {
-		engine.ShowSQL(true)
+		Engine.ShowSQL(true)
 	}
+	Engine.ShowSQL(true)
+	MaxIdleConn,Err := cfg.Section("mysql").Key("DbMaxIdleConn").Int()
+	if Err != nil {
+		log.Fatalf("DbMaxIdleConn Get err: %s", Err.Error())
+	}
+	Engine.SetMaxIdleConns(MaxIdleConn) //连接池的空闲数大小
 
-	engine.SetMaxIdleConns(config.DbMysqlConfig.DbMaxIdleConn) //连接池的空闲数大小
-	engine.SetMaxOpenConns(config.DbMysqlConfig.DbMaxOpenConn) //最大打开连接数
+	MaxOpenConn,Err := cfg.Section("mysql").Key("DbMaxOpenConn").Int()
+	if Err != nil {
+		log.Fatalf("DbMaxOpenConn Get err: %s", Err.Error())
+	}
+	Engine.SetMaxOpenConns(MaxOpenConn) //最大打开连接数
 
 	timer := time.NewTicker(time.Minute * 30) //定时器 ping
 	go func(x *xorm.Engine) {
 		for range timer.C {
-			err = x.Ping()
-			if err != nil {
-				log.Fatalf("数据库连接错误: %#v\n", err.Error())
+			Err = x.Ping()
+			if Err != nil {
+				log.Fatalf("数据库连接错误: %#v\n", Err.Error())
 			}
 		}
-	}(engine)*/
+	}(Engine)
 
 }
 
