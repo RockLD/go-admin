@@ -14,7 +14,6 @@ type Nodes struct {
 }
 
 func (nodes *Nodes)TableName()string{
-
 	return "nodes"
 }
 

@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"go-admin/models"
+	"go-admin/common"
 )
 
 type IndexController struct {
@@ -15,8 +16,9 @@ func (index IndexController)Index(c *gin.Context) {
 	nodes,_ := np.GetList()
 
 	//fmt.Println(nodes)
+	nodeTree := common.CreateMenuTree(nodes)
 	c.HTML(http.StatusOK,"index/index.html",gin.H{
-		"nodes":nodes,
+		"nodes":nodeTree,
 	})
 }
 
