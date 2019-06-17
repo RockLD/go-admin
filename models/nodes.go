@@ -18,8 +18,6 @@ func (nodes *Nodes)TableName()string{
 }
 
 func (Nodes) GetList() (n []Nodes,err error) {
-
-	//nds := make(map[int]*Nodes)
 	services.InitMysql()
 	err = services.Engine.Find(&n)
 
@@ -27,4 +25,10 @@ func (Nodes) GetList() (n []Nodes,err error) {
 		return n,err
 	}
 	return n,nil
+}
+
+func (Nodes) GetListByRole() (n []Nodes,err error){
+	
+
+	return
 }

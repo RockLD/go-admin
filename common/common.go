@@ -34,6 +34,7 @@ func CreateMenuTree ( nodes []models.Nodes) (tree []Tree) {
 			Children:[]Tree{},
 		}
 	}
+
 	for index,value := range res {
 		if value.ParentNodeID != 0 {
 			res[value.ParentNodeID].Children = append(res[value.ParentNodeID].Children,*res[index])
