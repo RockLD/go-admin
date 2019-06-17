@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"go-admin/models"
 	"go-admin/common"
+	"fmt"
 )
 
 type IndexController struct {
@@ -15,8 +16,9 @@ func (index IndexController)Index(c *gin.Context) {
 	var np models.Nodes
 	nodes,_ := np.GetList()
 
-	//fmt.Println(nodes)
+
 	nodeTree := common.CreateMenuTree(nodes)
+	fmt.Println(nodeTree)
 	c.HTML(http.StatusOK,"index/index.html",gin.H{
 		"nodes":nodeTree,
 	})

@@ -19,13 +19,30 @@ type Tree struct {
 	AuthRule string
 	IsMenu int
 	Style string
-	Children *Tree
+	Children []Tree
 }
 
 func CreateMenuTree ( nodes []models.Nodes) (tree []Tree) {
-	res := make(map[int]models.Nodes)
+	res := make(map[int]*Tree)
 	for _,v := range nodes {
-		res[v.NodeID] = v
+		res[v.NodeID] = &Tree{NodeID:v.NodeID,
+			NodeName:v.NodeName,
+			ParentNodeID:v.ParentNodeID,
+			AuthRule:v.AuthRule,
+			IsMenu:v.IsMenu,
+			Style:v.Style,
+			Children:[]Tree{},
+		}
+	}
+	for index,value := range res {
+		if value.ParentNodeID != 0 {
+			res[value.ParentNodeID].Children = append(res[value.ParentNodeID].Children,*res[index])
+		}
+	}
+	for _,val := range res {
+		if val.ParentNodeID == 0 {
+			tree = append(tree,*val)
+		}
 	}
 	return tree
 }
