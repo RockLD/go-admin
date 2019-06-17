@@ -11,8 +11,8 @@ type NodesController struct {
 }
 
 func (nodes NodesController) Index(c *gin.Context) {
-	nds,err := models.Nodes{}.GetList()
-
+	var ns *models.Nodes
+	nds,err := ns.GetList()
 	if err != nil {
 		c.JSON(http.StatusOK,gin.H{
 			"code":2,

@@ -11,7 +11,10 @@ type IndexController struct {
 }
 
 func (index IndexController)Index(c *gin.Context) {
-	nodes,_ := models.Nodes{}.GetList()
+	var np models.Nodes
+	nodes,_ := np.GetList()
+
+	//fmt.Println(nodes)
 	c.HTML(http.StatusOK,"index/index.html",gin.H{
 		"nodes":nodes,
 	})
