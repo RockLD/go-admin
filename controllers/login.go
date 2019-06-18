@@ -45,6 +45,8 @@ func (login Login) Login(c *gin.Context) {
 	}
 	session.Values["admin_id"] = 1
 	session.Values["username"] = username
+	session.Values["role_id"] = 1
+
 	err = session.Save(c.Request,c.Writer)
 	if err != nil {
 		c.JSON(http.StatusOK,gin.H{

@@ -15,10 +15,8 @@ func (Roles)GetRule(RoleID int)(rule string){
 	if RoleID == 1 {
 		return
 	}
-	role := Roles{RoleID:RoleID}
-	_,err := services.Engine.Get(role)
-	if err == nil {
-		rule = role.Rule
-	}
+
+	services.Engine.Where("role_id = ?",RoleID).Cols("rule").Get(rule)
+
 	return
 }

@@ -13,9 +13,7 @@ type IndexController struct {
 }
 
 func (index IndexController)Index(c *gin.Context) {
-	var np models.Nodes
-	nodes,_ := np.GetList()
-
+	nodes,_ := models.Nodes{}.GetListByRole()
 
 	nodeTree := common.CreateMenuTree(nodes)
 	fmt.Println(nodeTree)
