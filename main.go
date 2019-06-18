@@ -1,10 +1,10 @@
 package main
 
 import (
+	"github.com/gorilla/sessions"
 	r "go-admin/router"
 	"net/http"
 	"time"
-	"github.com/gorilla/sessions"
 )
 
 var Store = sessions.NewCookieStore([]byte("go-admin"))

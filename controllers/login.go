@@ -2,32 +2,42 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
-	"fmt"
 	"net/http"
 	"go-admin/common"
 	"go-admin/middleware"
+	"go-admin/models"
 )
 
-type Login struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
+type LoginController struct {}
 
-func (login Login) Login(c *gin.Context) {
-	fmt.Println("do-login")
+//do-login
+func (login LoginController) Login(c *gin.Context) {
 	username := c.PostForm("username")
-
-	if username != "admin" {
+	userInfo,err := models.Admins{}.GetInfoByUser(username)
+	if err != nil {
 		c.JSON(http.StatusOK,gin.H{
 			"type":"failed",
-			"message":"账号错误",
+			"message":err.Error(),
 		})
-		return
 	}
+
+	if userInfo == nil {
+		c.JSON(http.StatusOK,gin.H{
+			"type":"failed",
+			"message":"账号不存在",
+		})
+	}
+
+	if userInfo.Status != 1 {
+		c.JSON(http.StatusOK,gin.H{
+			"type":"failed",
+			"message":"账号状态异常，请联系管理员",
+		})
+	}
+
 	password := common.MyMd5(c.PostForm("password"))
 
-	md := "e10adc3949ba59abbe56e057f20f883e"
-	if password != md {
+	if password != userInfo.Password {
 		c.JSON(http.StatusOK,gin.H{
 			"type":"failed",
 			"message":"密码错误",
@@ -39,19 +49,19 @@ func (login Login) Login(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusOK,gin.H{
 			"type":"failed",
-			"message":"session error",
+			"message":"session error:" + err.Error(),
 		})
 		return
 	}
-	session.Values["admin_id"] = 1
+	session.Values["admin_id"] = userInfo.AdminId
 	session.Values["username"] = username
-	session.Values["role_id"] = 1
+	session.Values["role_id"] = userInfo.RoleId
 
 	err = session.Save(c.Request,c.Writer)
 	if err != nil {
 		c.JSON(http.StatusOK,gin.H{
 			"type":"failed",
-			"message":"session error",
+			"message":"session error:" + err.Error(),
 		})
 		return
 	}

@@ -33,16 +33,13 @@ func (ns Nodes) GetListByRole(RoleID int) (n []Nodes,err error){
 		 return ns.GetList()
 	}
 
-
-
-	rule := Roles{}.GetRule(2)
+	rule := Roles{}.GetRule(RoleID)
 	if rule == "" {
 		return n,err
 	}
 
 	services.InitMysql()
-	err = services.Engine.Find(&n)
-
+	err = services.Engine.Where("node_id in ?","(" + rule + ")").Find(n)
 	if err != nil {
 		return n,err
 	}
