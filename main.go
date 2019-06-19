@@ -9,6 +9,10 @@ import (
 
 var Store = sessions.NewCookieStore([]byte("go-admin"))
 
+func init() {
+	sessions.Session{}.Flashes()
+}
+
 func main() {
 	router := r.Engine()
 

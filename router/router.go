@@ -26,12 +26,12 @@ func Engine() *gin.Engine {
 	router.POST("/ad/do-login", controllers.LoginController{}.Login)
 
 	//校验
-	authorize := router.Group("/admin", middleware.SessionAuth)
+	sessionAuth := router.Group("/admin", middleware.SessionAuth)
 	{
-		authorize.GET("/index", controllers.IndexController{}.Index)
-		authorize.GET("/first", controllers.IndexController{}.First)
-		authorize.Any("/nodes", controllers.NodesController{}.Index)
-		authorize.Any("/admins", controllers.Admins{}.Index)
+		sessionAuth.GET("/index", controllers.IndexController{}.Index)
+		sessionAuth.GET("/first", controllers.IndexController{}.First)
+		sessionAuth.Any("/nodes", controllers.NodesController{}.Index)
+		sessionAuth.Any("/admins", controllers.Admins{}.Index)
 	}
 
 	return router
